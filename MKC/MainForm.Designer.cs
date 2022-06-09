@@ -37,6 +37,8 @@ namespace MKC
             this.projectFolderBroswerButton = new System.Windows.Forms.Button();
             this.overwriteCheckbox = new System.Windows.Forms.CheckBox();
             this.runButton = new System.Windows.Forms.Button();
+            this.RewriteButton = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // firmFolderPathTextBox
@@ -94,7 +96,7 @@ namespace MKC
             // overwriteCheckbox
             // 
             this.overwriteCheckbox.AutoSize = true;
-            this.overwriteCheckbox.Location = new System.Drawing.Point(224, 94);
+            this.overwriteCheckbox.Location = new System.Drawing.Point(224, 390);
             this.overwriteCheckbox.Name = "overwriteCheckbox";
             this.overwriteCheckbox.Size = new System.Drawing.Size(155, 17);
             this.overwriteCheckbox.TabIndex = 7;
@@ -104,7 +106,7 @@ namespace MKC
             // 
             // runButton
             // 
-            this.runButton.Location = new System.Drawing.Point(224, 331);
+            this.runButton.Location = new System.Drawing.Point(523, 94);
             this.runButton.Name = "runButton";
             this.runButton.Size = new System.Drawing.Size(75, 23);
             this.runButton.TabIndex = 8;
@@ -112,11 +114,32 @@ namespace MKC
             this.runButton.UseVisualStyleBackColor = true;
             this.runButton.Click += new System.EventHandler(this.OnRunButtonClick);
             // 
+            // RewriteButton
+            // 
+            this.RewriteButton.Location = new System.Drawing.Point(523, 172);
+            this.RewriteButton.Name = "RewriteButton";
+            this.RewriteButton.Size = new System.Drawing.Size(75, 23);
+            this.RewriteButton.TabIndex = 9;
+            this.RewriteButton.Text = "Rewrite";
+            this.RewriteButton.UseVisualStyleBackColor = true;
+            this.RewriteButton.Click += new System.EventHandler(this.RewriteButton_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(103, 177);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(180, 13);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "Rewrite part Matchkey to assemblies";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.RewriteButton);
             this.Controls.Add(this.runButton);
             this.Controls.Add(this.overwriteCheckbox);
             this.Controls.Add(this.projectFolderBroswerButton);
@@ -142,5 +165,7 @@ namespace MKC
         private System.Windows.Forms.Button projectFolderBroswerButton;
         private System.Windows.Forms.CheckBox overwriteCheckbox;
         private System.Windows.Forms.Button runButton;
+        private System.Windows.Forms.Button RewriteButton;
+        private System.Windows.Forms.Label label3;
     }
 }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Tekla.Structures;
 
 namespace MKC
 {
@@ -24,13 +25,29 @@ namespace MKC
             string firmFileName = "MK_Matchkey_conversion.txt";
             List<string> firmPaths = new List<string>();
             Tekla.Structures.TeklaStructuresSettings.GetAdvancedOptionPaths("XS_FIRM", out firmPaths, null);
-            _FirmPath = System.IO.Path.Combine(firmPaths[0], firmFileName);
+            if (firmPaths.Count > 0)
+            {
+                _FirmPath = System.IO.Path.Combine(firmPaths[0], firmFileName);
+                firmFolderPathTextBox.Text = _FirmPath;
+            }
+            else
+            {
+                _FirmPath = String.Empty;
+            }
 
             string projectFileName = "Project_Matchkey_conversion.txt";
             List<string> projectPaths = new List<string>();
             Tekla.Structures.TeklaStructuresSettings.GetAdvancedOptionPaths("XS_PROJECT", out projectPaths, null);
-            string fileToFind = System.IO.Path.Combine(projectPaths[0], projectFileName);
-            _ProjectPath = fileToFind;
+            if (projectPaths.Count > 0)
+            {
+                string fileToFind = System.IO.Path.Combine(projectPaths[0], projectFileName);
+                _ProjectPath = fileToFind;
+                projectFolderPathTextBox.Text = _ProjectPath;
+            }
+            else
+            {  
+                _ProjectPath = String.Empty;
+            }
         }
 
         private void OnFirmFolderBroswerButtonClick(object sender, EventArgs e)
@@ -61,14 +78,32 @@ namespace MKC
             {
                 projectFolderPathTextBox.Text = openFileDialog.FileName;
             }
-        }      
+        }
+        private void RewriteButton_Click(object sender, EventArgs e)
+        {
+            if (firmFolderPathTextBox.Text.Length > 1)
+            {
+                _FirmPath = firmFolderPathTextBox.Text;
+            }
+            if (projectFolderPathTextBox.Text.Length > 1)
+            {
+                _ProjectPath = projectFolderPathTextBox.Text;
+            }
 
+            Engine.Rewrite(ProjectPath, Overwrite);
+        }
         private void OnRunButtonClick(object sender, EventArgs e)
         {
-            _FirmPath = projectFolderPathTextBox.Text;
-            _ProjectPath = projectFolderPathTextBox.Text;
+            if(firmFolderPathTextBox.Text.Length>1)
+            {
+                _FirmPath = firmFolderPathTextBox.Text;
+            }
+            if (projectFolderPathTextBox.Text.Length > 1)
+            {
+                _ProjectPath = projectFolderPathTextBox.Text;
+            }
 
-            Converter.Run(FirmPath, ProjectPath, Overwrite);
+            Engine.Run(FirmPath, ProjectPath, Overwrite);
         }
 
         private void OnOverwriteCheckboxChanged(object sender, EventArgs e)
@@ -81,5 +116,7 @@ namespace MKC
         private string _FirmPath = string.Empty;
         private bool _Overwrite = false;
         #endregion
+
+       
     }
 }
