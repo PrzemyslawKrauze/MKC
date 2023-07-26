@@ -7,6 +7,7 @@ using Tekla.Structures;
 using Tekla.Structures.Geometry3d;
 using Tekla.Structures.Model;
 using Tekla.Structures.Model.Operations;
+using Tekla.Structures.Model.UI;
 
 
 namespace MKC
@@ -55,7 +56,27 @@ namespace MKC
             }
             return list;
         }
+        public static List<ModelObject> GetAllObjectsOfType(Model model,Type type)
+        {
+            Type[] Types = new Type[] { type };
+            ModelObjectEnumerator moe = model.GetModelObjectSelector().GetAllObjectsWithType(Types);
+            List<ModelObject> assemblyList = Utility.ToList(moe);
+            return assemblyList;
 
-   
+        }
+
+        public static RebarSet[] PickRebarSets()
+        {
+            Picker picker = new Picker();
+            ModelObjectEnumerator modelObjectEnumerator = picker.PickObjects(Picker.PickObjectsEnum.PICK_N_REINFORCEMENTS, "Pick rebar sets");
+            RebarSet[] array = new RebarSet[modelObjectEnumerator.GetSize()];
+            for (int i = 0; i < array.Length; i++)
+            {
+                modelObjectEnumerator.MoveNext();
+                array[i] = modelObjectEnumerator.Current as RebarSet;
+            }
+
+            return array;
+        }
     }
 }

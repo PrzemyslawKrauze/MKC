@@ -8,16 +8,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Tekla.Structures;
+using Tekla.Structures.Model;
 
 namespace MKC
 {
     public partial class MainForm : Form
     {
         #region Properties
-        public string ProjectPath { get {return _ProjectPath; } }
+        public string ProjectPath { get { return _ProjectPath; } }
         public string FirmPath { get { return _FirmPath; } }
         public bool Overwrite { get { return _Overwrite; } }
-            #endregion
+        #endregion
         public MainForm()
         {
             InitializeComponent();
@@ -45,11 +46,15 @@ namespace MKC
                 projectFolderPathTextBox.Text = _ProjectPath;
             }
             else
-            {  
+            {
                 _ProjectPath = String.Empty;
             }
         }
-
+        private void DisplayOparationStatusMessage(bool succes)
+        {
+            string message = succes ? "Operation successful" : "Operation faild";
+            MessageBox.Show(message);
+        }
         private void OnFirmFolderBroswerButtonClick(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog()
@@ -90,11 +95,12 @@ namespace MKC
                 _ProjectPath = projectFolderPathTextBox.Text;
             }
 
-            Engine.Rewrite(ProjectPath, Overwrite);
+            bool succes = Engine.RewriteMatchkeyToAssembly(Overwrite);
+            DisplayOparationStatusMessage(succes);
         }
-        private void OnRunButtonClick(object sender, EventArgs e)
+        private void RewriteUDAButton_Click(object sender, EventArgs e)
         {
-            if(firmFolderPathTextBox.Text.Length>1)
+            if (firmFolderPathTextBox.Text.Length > 1)
             {
                 _FirmPath = firmFolderPathTextBox.Text;
             }
@@ -103,9 +109,28 @@ namespace MKC
                 _ProjectPath = projectFolderPathTextBox.Text;
             }
 
-            Engine.Run(FirmPath, ProjectPath, Overwrite);
+            bool succes = Engine.RewriteIFCBUILDINGAndIFCBUILDINGSTOREYToAssembly(Overwrite);
+            DisplayOparationStatusMessage(succes);
         }
+        private void OnRunButtonClick(object sender, EventArgs e)
+        {
+            if (firmFolderPathTextBox.Text.Length > 1)
+            {
+                _FirmPath = firmFolderPathTextBox.Text;
+            }
+            if (projectFolderPathTextBox.Text.Length > 1)
+            {
+                _ProjectPath = projectFolderPathTextBox.Text;
+            }
+            else
+            {
+                _ProjectPath = String.Empty;
+            }
 
+            bool succes = Engine.Run(FirmPath, ProjectPath, Overwrite);
+            DisplayOparationStatusMessage(succes);
+        }
+      
         private void OnOverwriteCheckboxChanged(object sender, EventArgs e)
         {
             _Overwrite = overwriteCheckbox.Checked;
@@ -115,8 +140,72 @@ namespace MKC
         private string _ProjectPath = string.Empty;
         private string _FirmPath = string.Empty;
         private bool _Overwrite = false;
+
+
         #endregion
 
-       
+        private void CalculatePartAreaButton_Click(object sender, EventArgs e)
+        {
+            bool succes = Engine.CalculateCorrectArea(Overwrite);
+            DisplayOparationStatusMessage(succes);
+        }
+
+        private void CalculateAssemblyAreaButton_Click(object sender, EventArgs e)
+        {
+            bool succes = Engine.CallculateCorrectAreaForAssembly(Overwrite);
+            DisplayOparationStatusMessage(succes);
+        }
+
+        private void RewritePhaseButton_Click(object sender, EventArgs e)
+        {
+            bool succes = Engine.RewritePhaseToUDA(Overwrite);
+            DisplayOparationStatusMessage(succes);
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void changePrefixButton_Click(object sender, EventArgs e)
+        {
+            string oldPrefix = oldPrefixTextBox.Text;
+            string newPrefix = newPrefixTextBox.Text;
+            RebarSet[] rebarSets =  Utility.PickRebarSets();
+            bool succes =  Engine.ChangePrefix(rebarSets,oldPrefix,newPrefix);
+        }
+
+        private void label13_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label14_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label12_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void rebarSeqButton_Click(object sender, EventArgs e)
+        {
+            string prefix = rebarSeqPrefix.Text;
+            int startNumber = Convert.ToInt32(rebarSeqStartNumber.Text);
+            int endNumber = Convert.ToInt32(rebarSeqEndNumber.Text);
+            int seqNumber = Convert.ToInt32(rebarSeqSeq.Text);
+            bool succes = Engine.SetRebarSeqNumber(prefix, startNumber, endNumber, seqNumber);
+        }
     }
 }
